@@ -51,7 +51,7 @@ async def forward(self):
     # Build synapse for request
     # Replace dummy_input with actually defined variables in protocol.py
     # This can be combined with line 49
-    synapse = predictionnet.protocol.Dummy(
+    synapse = predictionnet.protocol.Challenge(
         timestamp=timestamp,
         open_price=open_price,
         high_price=high_price,
