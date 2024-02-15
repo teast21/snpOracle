@@ -32,7 +32,8 @@ def reward(query: int, response: int) -> float:
 
     return 1.0 if response == query * 2 else 0
 
-
+# Query prob editied to query: Protocol defined synapse
+# For this method mostly should defer to Rahul/Tommy
 def get_rewards(
     self,
     query: int,
