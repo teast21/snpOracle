@@ -53,6 +53,7 @@ async def forward(self):
     # This can be combined with line 49
     synapse = predictionnet.protocol.Dummy(
         timestamp=timestamp,
+        open_price=open_price,
         high_price=high_price,
         low_price=low_price,
         volume=volume,

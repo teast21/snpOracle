@@ -17,6 +17,7 @@
 
 import time
 from datetime import datetime, timedelta
+import pytz
 
 # Bittensor
 import bittensor as bt
@@ -53,7 +54,8 @@ class Validator(BaseValidatorNeuron):
     def get_input_data(): 
 
         #Get formatted date to input to yahoo finance
-        current_date = datetime.now()
+        timezone = pytz.timezone('America/New_York')
+        current_date = datetime.now(timezone)
         formatted_date = current_date.strftime("%Y-%m-%d")
 
         #timeshift back a day to pull data
@@ -61,7 +63,7 @@ class Validator(BaseValidatorNeuron):
         yesterday = date_obj - timedelta(days=1)
 
         #pull data
-        data = yf.download("^GSPC", start=formatted_date, end=formatted_date)
+        data = yf.download("^GSPC", start=yesterday, end=formatted_date)
         
         #convert current_date to unix
         unix_timstamp = int(current_date.timestamp())
