@@ -41,7 +41,7 @@ import pydantic
 #   assert dummy_output == 2
 
 
-class Dummy(bt.Synapse):
+class Challenge(bt.Synapse):
     """
     A simple dummy protocol representation which uses bt.Synapse as its base.
     This protocol helps in handling dummy request and response communication between
