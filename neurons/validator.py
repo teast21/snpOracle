@@ -49,7 +49,7 @@ class Validator(BaseValidatorNeuron):
 
         # TODO(developer): Anything specific to your use case you can do here
 
-    # TODO define what input features should be
+    # TODO potentially adjust formatting
     def get_input_data(): 
 
         #Get formatted date to input to yahoo finance
@@ -67,7 +67,7 @@ class Validator(BaseValidatorNeuron):
         unix_timstamp = int(current_date.timestamp())
 
         #return input features
-        return (unix_timstamp, data['Open'].values[0], data['High'].values[0], data['Close'].values[0], data['Volume'].values[0])
+        return (unix_timstamp, data['Open'].values[0], data['High'].values[0], data['Low'].values[0], data['Volume'].values[0])
 
 
     async def forward(self):

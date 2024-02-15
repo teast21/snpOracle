@@ -46,7 +46,7 @@ async def forward(self):
 
     # Here input data should be gathered to send to the miners
     # TODO(create get_input_data())
-    timestamp, high_price, low_price, volume = self.get_input_data()
+    timestamp, open_price, high_price, low_price, volume = self.get_input_data()
 
     # Build synapse for request
     # Replace dummy_input with actually defined variables in protocol.py
