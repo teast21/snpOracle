@@ -41,7 +41,7 @@ import pydantic
 #   assert dummy_output == 2
 
 
-class Dummy(bt.Synapse):
+class Challenge(bt.Synapse):
     """
     A simple dummy protocol representation which uses bt.Synapse as its base.
     This protocol helps in handling dummy request and response communication between
@@ -57,6 +57,13 @@ class Dummy(bt.Synapse):
         ...,
         title="Timestamp",
         description="The time stamp at which the validation is taking place for",
+        allow_mutation=False,
+    )
+
+    open_price : float = pydantic.Field(
+        ...,
+        title="High price",
+        description="The open price of S&P 500 for the day",
         allow_mutation=False,
     )
 

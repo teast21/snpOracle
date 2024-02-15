@@ -1,7 +1,4 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
-# TODO(developer): Set your name
-# Copyright © 2023 <your name>
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -19,16 +16,20 @@
 
 
 import time
+from datetime import datetime, timedelta
 
 # Bittensor
 import bittensor as bt
 
 # Bittensor Validator Template:
-import template
-from template.validator import forward
+import predictionnet
+from predictionnet.validator import forward
 
 # import base validator class which takes care of most of the boilerplate
-from template.base.validator import BaseValidatorNeuron
+from predictionnet.base.validator import BaseValidatorNeuron
+
+#import yahoo finance for data
+import yfinance as yf
 
 
 class Validator(BaseValidatorNeuron):
@@ -47,6 +48,27 @@ class Validator(BaseValidatorNeuron):
         self.load_state()
 
         # TODO(developer): Anything specific to your use case you can do here
+
+    # TODO define what input features should be
+    def get_input_data(): 
+
+        #Get formatted date to input to yahoo finance
+        current_date = datetime.now()
+        formatted_date = current_date.strftime("%Y-%m-%d")
+
+        #timeshift back a day to pull data
+        date_obj = datetime.strptime(formatted_date, "%Y-%m-%d")
+        yesterday = date_obj - timedelta(days=1)
+
+        #pull data
+        data = yf.download("^GSPC", start=formatted_date, end=formatted_date)
+        
+        #convert current_date to unix
+        unix_timstamp = int(current_date.timestamp())
+
+        #return input features
+        return (unix_timstamp, data['Open'].values[0], data['High'].values[0], data['Close'].values[0], data['Volume'].values[0])
+
 
     async def forward(self):
         """
