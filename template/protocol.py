@@ -19,6 +19,7 @@
 
 import typing
 import bittensor as bt
+import pydantic
 
 # TODO(developer): Rewrite with your protocol definition.
 
@@ -52,10 +53,40 @@ class Dummy(bt.Synapse):
     """
 
     # Required request input, filled by sending dendrite caller.
-    dummy_input: int
+    timestamp: int = pydantic.Field(
+        ...,
+        title="Timestamp",
+        description="The time stamp at which the validation is taking place for",
+        allow_mutation=False,
+    )
+
+    high_price : float = pydantic.Field(
+        ...,
+        title="High price",
+        description="The high price of S&P 500 for the day",
+        allow_mutation=False,
+    )
+
+    low_price : float = pydantic.Field(
+        ...,
+        title="High price",
+        description="The low price of S&P 500 for the day",
+        allow_mutation=False,
+    )
+
+    volume : float = pydantic.Field(
+        ...,
+        title="Volume",
+        description="S&P 500 trading volume",
+        allow_mutation=False,
+    )
 
     # Optional request output, filled by recieving axon.
-    dummy_output: typing.Optional[int] = None
+    close_price: typing.Optional[float] = pydantic.Field(
+        ...,
+        title="Closing price",
+        description="Closing price of S&P 500 closing price"
+    )
 
     def deserialize(self) -> int:
         """
@@ -73,4 +104,4 @@ class Dummy(bt.Synapse):
         >>> dummy_instance.deserialize()
         5
         """
-        return self.dummy_output
+        return self.close_price
