@@ -89,10 +89,10 @@ class Challenge(bt.Synapse):
     )
 
     # Optional request output, filled by recieving axon.
-    close_price: typing.Optional[float] = pydantic.Field(
+    prediction: typing.Optional[float] = pydantic.Field(
         ...,
-        title="Closing price",
-        description="Closing price of S&P 500 closing price"
+        title="Prediction",
+        description="Prediction for closing price of S&P 500"
     )
 
     def deserialize(self) -> int:
