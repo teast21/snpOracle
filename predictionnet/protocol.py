@@ -59,35 +59,6 @@ class Challenge(bt.Synapse):
         description="The time stamp at which the validation is taking place for",
         allow_mutation=False,
     )
-
-    open_price : float = pydantic.Field(
-        ...,
-        title="High price",
-        description="The open price of S&P 500 for the day",
-        allow_mutation=False,
-    )
-
-    high_price : float = pydantic.Field(
-        ...,
-        title="High price",
-        description="The high price of S&P 500 for the day",
-        allow_mutation=False,
-    )
-
-    low_price : float = pydantic.Field(
-        ...,
-        title="High price",
-        description="The low price of S&P 500 for the day",
-        allow_mutation=False,
-    )
-
-    volume : float = pydantic.Field(
-        ...,
-        title="Volume",
-        description="S&P 500 trading volume",
-        allow_mutation=False,
-    )
-
     # Optional request output, filled by recieving axon.
     prediction: typing.Optional[float] = pydantic.Field(
         ...,
@@ -111,4 +82,4 @@ class Challenge(bt.Synapse):
         >>> dummy_instance.deserialize()
         5
         """
-        return self.close_price
+        return self.prediction

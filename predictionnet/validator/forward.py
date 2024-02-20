@@ -26,6 +26,9 @@ from predictionnet.protocol import Challenge
 from predictionnet.validator.reward import get_rewards
 from predictionnet.utils.uids import get_random_uids
 
+from datetime import datetime
+import time
+
 
 async def forward(self):
     """
@@ -40,23 +43,28 @@ async def forward(self):
     # TODO(developer): Define how the validator selects a miner to query, how often, etc.
     # get_random_uids is an example method, but you can replace it with your own.
     
+    # wait for market to be open
+    while True:
+        if await self.is_market_open(datetime.now()):
+            bt.logging.info("Market is open. Begin processes requests")
+            break  # Exit the loop if market is open
+        else:
+            bt.logging.info("Market is closed. Sleeping for 5 minutes...")
+            time.sleep(300)  # Sleep for 5 minutes before checking again
+    
     # Added min function to confirm the # of uids never increases beyond the amount of miners available
     # Where does config come from?? 
     miner_uids = get_random_uids(self, k=min(self.config.neuron.sample_size, self.metagraph.n.item()))
 
     # Here input data should be gathered to send to the miners
     # TODO(create get_input_data())
-    timestamp, open_price, high_price, low_price, volume = self.get_input_data()
+    timestamp = datetime.now()
 
     # Build synapse for request
     # Replace dummy_input with actually defined variables in protocol.py
     # This can be combined with line 49
     synapse = predictionnet.protocol.Challenge(
         timestamp=timestamp,
-        open_price=open_price,
-        high_price=high_price,
-        low_price=low_price,
-        volume=volume,
     )
 
     # The dendrite client queries the network.
