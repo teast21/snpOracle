@@ -25,6 +25,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 
 from base_miner.predict import predict
+from base_miner.get_data import prep_data, scale_data
 
 #import predictionnet 
 # Bittensor Miner Template:
@@ -168,13 +169,19 @@ class Miner(BaseMinerNeuron):
         timestamp = synapse.timestamp
 
         model = load_model(self.model_dir)
+        data = prep_data()
+        scaler, _, _ = scale_data(data)
+        #mse = create_and_save_base_model(scaler, X, y)
+        prediction = predict(scaler, model)
 
-        pred = predict()
-
-        #pred_np_array = np.array(pred).reshape(-1, 1)
+        #pred_np_array = np.array(prediction).reshape(-1, 1)
 
         # logic to ensure that only past 20 day context exists in synapse
-        synapse.prediction = pred
+        synapse.prediction = prediction
+        
+        bt.logging.info(
+            f"Predicted price: {synapse.prediction}"
+        )
 
         return synapse
 
@@ -185,3 +192,4 @@ if __name__ == "__main__":
         while True:
             bt.logging.info("Miner running...", time.time())
             time.sleep(5)
+

@@ -36,3 +36,17 @@ def round_down_time(unix_timestamp, interval_minutes=5):
 
     return rounded_dt
 
+def scale_data(data):
+    X = data[['Open', 'High', 'Low', 'Volume', 'SMA_50', 'SMA_200', 'RSI', 'CCI', 'Momentum']].values
+
+    # Prepare target variable
+    y = data[['NextClose']].values
+
+    # Scale features
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    X_scaled = scaler.fit_transform(X)
+    y_scaled = scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
+
+    return scaler, X_scaled, y_scaled
+
+

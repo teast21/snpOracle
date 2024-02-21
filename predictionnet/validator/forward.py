@@ -56,7 +56,7 @@ async def forward(self):
     # TODO(create get_input_data())
     
     current_time_ny = datetime.now(ny_timezone)
-    timestamp = current_time_ny
+    timestamp = current_time_ny.isoformat()
 
     # Build synapse for request
     # Replace dummy_input with actually defined variables in protocol.py

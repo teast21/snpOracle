@@ -54,7 +54,7 @@ class Challenge(bt.Synapse):
     """
 
     # Required request input, filled by sending dendrite caller.
-    timestamp: datetime = pydantic.Field(
+    timestamp: str = pydantic.Field(
         ...,
         title="Timestamp",
         description="The time stamp at which the validation is taking place for",

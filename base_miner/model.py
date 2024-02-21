@@ -6,17 +6,8 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-def create_and_save_base_model(data):
+def create_and_save_base_model(scaler, X_scaled, y_scaled):
     model_name = "mining_models/base_lstm"
-    X = data[['Open', 'High', 'Low', 'Volume', 'SMA_50', 'SMA_200', 'RSI', 'CCI', 'Momentum']].values
-
-    # Prepare target variable
-    y = data[['NextClose']].values
-
-    # Scale features
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    X_scaled = scaler.fit_transform(X)
-    y_scaled = scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
 
     # Reshape input for LSTM
     X_scaled = X_scaled.reshape((X_scaled.shape[0], 1, X_scaled.shape[1]))
@@ -49,4 +40,4 @@ def create_and_save_base_model(data):
     mse = mean_squared_error(y_test_rescaled, predicted_prices)
     print(f'Mean Squared Error: {mse}')
 
-    return scaler
+    return mse

@@ -24,6 +24,7 @@ from predictionnet.protocol import Challenge
 import time
 from datetime import datetime, timedelta
 import yfinance as yf
+from pytz import timezone
 
 def reward(close_price: float, response: int) -> float:
     """
@@ -63,13 +64,16 @@ def get_rewards(
     ticker = yf.Ticker(ticker_symbol)
 
     timestamp = query.timestamp
+    timestamp = datetime.fromisoformat(timestamp)
 
     # Round up current timestamp and then wait until that time has been hit
     rounded_up_time = timestamp - timedelta(minutes=timestamp.minute % 5,
                                     seconds=timestamp.second,
                                     microseconds=timestamp.microsecond) + timedelta(minutes=5)
     
-    while (datetime.now() < rounded_up_time):
+    ny_timezone = timezone('America/New_York')
+
+    while (datetime.now(ny_timezone) < rounded_up_time):
         bt.logging.info("Waiting for next 5m interval...")
         time.sleep(15)
 
