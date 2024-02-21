@@ -17,7 +17,7 @@
 
 import time
 from datetime import datetime, timedelta
-import pytz
+import yfinance as yf
 
 # Bittensor
 import bittensor as bt
@@ -28,9 +28,6 @@ from predictionnet.validator import forward
 
 # import base validator class which takes care of most of the boilerplate
 from predictionnet.base.validator import BaseValidatorNeuron
-
-#import yahoo finance for data
-import yfinance as yf
 
 
 class Validator(BaseValidatorNeuron):
@@ -49,27 +46,17 @@ class Validator(BaseValidatorNeuron):
         self.load_state()
 
         # TODO(developer): Anything specific to your use case you can do here
-
-    # TODO potentially adjust formatting
-    def get_input_data(): 
-
-        #Get formatted date to input to yahoo finance
-        timezone = pytz.timezone('America/New_York')
-        current_date = datetime.now(timezone)
-        formatted_date = current_date.strftime("%Y-%m-%d")
-
-        #timeshift back a day to pull data
-        date_obj = datetime.strptime(formatted_date, "%Y-%m-%d")
-        yesterday = date_obj - timedelta(days=1)
-
-        #pull data
-        data = yf.download("^GSPC", start=yesterday, end=formatted_date)
         
-        #convert current_date to unix
-        unix_timstamp = int(current_date.timestamp())
-
-        #return input features
-        return (unix_timstamp, data['Open'].values[0], data['High'].values[0], data['Low'].values[0], data['Volume'].values[0])
+    
+    async def is_market_open(self, time):
+        ticker_symbol = '^GSPC'
+        ticker = yf.Ticker(ticker_symbol)
+        adjusted = time - timedelta(minutes=2)
+        data = ticker.history(start=adjusted, end=time, interval='1m')
+        if len(data) < 1: 
+            return False
+        
+        return True
 
 
     async def forward(self):

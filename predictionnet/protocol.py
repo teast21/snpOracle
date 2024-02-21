@@ -59,11 +59,11 @@ class Challenge(bt.Synapse):
         description="The time stamp at which the validation is taking place for",
         allow_mutation=False,
     )
-
+    # Optional request output, filled by recieving axon.
     prediction: typing.Optional[float] = pydantic.Field(
         ...,
-        title="Predicted closing price",
-        description="Closing price of S&P 500 closing price"
+        title="Prediction",
+        description="Prediction for closing price of S&P 500"
     )
 
     def deserialize(self) -> int:

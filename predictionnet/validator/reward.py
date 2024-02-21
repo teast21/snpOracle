@@ -24,7 +24,6 @@ from predictionnet.protocol import Challenge
 from datetime import datetime, timedelta
 import yfinance as yf
 
-
 def reward(close_price: float, response: int) -> float:
     """
     Reward the miner response to the dummy request. This method returns a reward
@@ -57,7 +56,7 @@ def get_rewards(
     if len(responses) == 0:
         bt.logging.info("Got no responses. Returning reward tensor of zeros.")
         return [], torch.zeros_like(0).to(self.device)  # Fallback strategy: Log and return 0.
-
+    
     # Prepare to extract close price for this timestamp
     ticker_symbol = '^GSPC'
     ticker = yf.Ticker(ticker_symbol)
@@ -67,6 +66,9 @@ def get_rewards(
 
     data = ticker.history(start=current_time_adjusted, end=timestamp, interval='1m')
     close_price = data['Close'].iloc[-1]
+
+
+    
     # Get all the reward results by iteratively calling your reward() function.
     return torch.FloatTensor(
         [reward(close_price, response) for response in responses]
