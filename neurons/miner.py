@@ -27,10 +27,15 @@ from tensorflow.keras.models import load_model
 from base_miner.predict import predict
 
 #import predictionnet 
+# Bittensor Miner Template:
 import predictionnet
 
 # import base miner class which takes care of most of the boilerplate
 from predictionnet.base.miner import BaseMinerNeuron
+
+# ML imports
+import tensorflow
+import numpy as np
 
 class Miner(BaseMinerNeuron):
     """
@@ -43,8 +48,9 @@ class Miner(BaseMinerNeuron):
 
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
-
+        print(config)
         # TODO(developer): Anything specific to your use case you can do here
+        self.model_dir = f'./mining_models/{self.config.model}'
 
     async def blacklist(
         self, synapse: predictionnet.protocol.Challenge
@@ -161,7 +167,7 @@ class Miner(BaseMinerNeuron):
         #TODO Create predict function to assign prediction to close price & create inputs
         timestamp = synapse.timestamp
 
-        model = load_model('mining_models/base_lstm.h5')
+        model = load_model(self.model_dir)
 
         pred = predict()
 

@@ -167,9 +167,8 @@ def add_args(cls, parser):
             "--model",
             type=str,
             help="The model the miner will load weights from",
-            default='model_foundry_v1'
+            default='base_lstm.h5'
         )
-
 
 def config(cls):
     """
