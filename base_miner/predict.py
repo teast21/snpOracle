@@ -1,6 +1,6 @@
 import numpy as np
-from get_data import prep_data, round_down_time
-from model import create_and_save_base_model
+from base_miner.get_data import prep_data, round_down_time
+from base_miner.model import create_and_save_base_model
 from tensorflow.keras.models import load_model
 
 def predict(scaler):

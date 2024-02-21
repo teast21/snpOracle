@@ -171,10 +171,10 @@ class Miner(BaseMinerNeuron):
 
         pred = predict()
 
-        pred_np_array = np.array(pred).reshape(-1, 1)
+        #pred_np_array = np.array(pred).reshape(-1, 1)
 
         # logic to ensure that only past 20 day context exists in synapse
-        synapse.prediction = pred_np_array
+        synapse.prediction = pred
 
         return synapse
 

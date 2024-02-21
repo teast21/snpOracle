@@ -20,6 +20,7 @@
 import typing
 import bittensor as bt
 import pydantic
+from datetime import datetime
 
 # TODO(developer): Rewrite with your protocol definition.
 
@@ -53,7 +54,7 @@ class Challenge(bt.Synapse):
     """
 
     # Required request input, filled by sending dendrite caller.
-    timestamp: int = pydantic.Field(
+    timestamp: datetime = pydantic.Field(
         ...,
         title="Timestamp",
         description="The time stamp at which the validation is taking place for",
@@ -61,7 +62,7 @@ class Challenge(bt.Synapse):
     )
     # Optional request output, filled by recieving axon.
     prediction: typing.Optional[float] = pydantic.Field(
-        ...,
+        default=None,
         title="Prediction",
         description="Prediction for closing price of S&P 500"
     )

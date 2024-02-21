@@ -1,4 +1,4 @@
-from get_data import prep_data
+from base_miner.get_data import prep_data
 
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
