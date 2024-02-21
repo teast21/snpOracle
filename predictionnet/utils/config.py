@@ -163,6 +163,13 @@ def add_args(cls, parser):
             default=False,
         )
 
+        parser.add_argument(
+            "--model",
+            type=str,
+            help="The model the miner will load weights from",
+            default='model_foundry_v1'
+        )
+
 
 def config(cls):
     """
