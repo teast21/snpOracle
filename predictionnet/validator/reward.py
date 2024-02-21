@@ -21,6 +21,7 @@ import torch
 from typing import List
 import bittensor as bt
 from predictionnet.protocol import Challenge
+import time
 from datetime import datetime, timedelta
 import yfinance as yf
 
@@ -62,9 +63,19 @@ def get_rewards(
     ticker = yf.Ticker(ticker_symbol)
 
     timestamp = query.timestamp
-    current_time_adjusted = timestamp - timedelta(minutes=2)
 
-    data = ticker.history(start=current_time_adjusted, end=timestamp, interval='1m')
+    # Round up current timestamp and then wait until that time has been hit
+    rounded_up_time = timestamp - timedelta(minutes=timestamp.minute % 5,
+                                    seconds=timestamp.second,
+                                    microseconds=timestamp.microsecond) + timedelta(minutes=5)
+    
+    while (datetime.now() < rounded_up_time):
+        bt.logging.info("Waiting for next 5m interval...")
+        time.sleep(15)
+
+    current_time_adjusted = rounded_up_time - timedelta(minutes=10)
+
+    data = ticker.history(start=current_time_adjusted, end=timestamp, interval='5m')
     close_price = data['Close'].iloc[-1]
 
 
