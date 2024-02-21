@@ -163,6 +163,12 @@ def add_args(cls, parser):
             default=False,
         )
 
+        parser.add_argument(
+            "--model",
+            type=str,
+            help="The model the miner will load weights from",
+            default='base_lstm.h5'
+        )
 
 def config(cls):
     """

@@ -17,16 +17,25 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+import argparse
 import time
 import typing
 import bittensor as bt
+import numpy as np
+from tensorflow.keras.models import load_model
 
+from base_miner.predict import predict
+
+#import predictionnet 
 # Bittensor Miner Template:
-import template
+import predictionnet
 
 # import base miner class which takes care of most of the boilerplate
-from template.base.miner import BaseMinerNeuron
+from predictionnet.base.miner import BaseMinerNeuron
 
+# ML imports
+import tensorflow
+import numpy as np
 
 class Miner(BaseMinerNeuron):
     """
@@ -39,31 +48,12 @@ class Miner(BaseMinerNeuron):
 
     def __init__(self, config=None):
         super(Miner, self).__init__(config=config)
-
+        print(config)
         # TODO(developer): Anything specific to your use case you can do here
-
-    async def forward(
-        self, synapse: template.protocol.Dummy
-    ) -> template.protocol.Dummy:
-        """
-        Processes the incoming 'Dummy' synapse by performing a predefined operation on the input data.
-        This method should be replaced with actual logic relevant to the miner's purpose.
-
-        Args:
-            synapse (template.protocol.Dummy): The synapse object containing the 'dummy_input' data.
-
-        Returns:
-            template.protocol.Dummy: The synapse object with the 'dummy_output' field set to twice the 'dummy_input' value.
-
-        The 'forward' function is a placeholder and should be overridden with logic that is appropriate for
-        the miner's intended operation. This method demonstrates a basic transformation of input data.
-        """
-        # TODO(developer): Replace with actual implementation logic.
-        synapse.dummy_output = synapse.dummy_input * 2
-        return synapse
+        self.model_dir = f'./mining_models/{self.config.model}'
 
     async def blacklist(
-        self, synapse: template.protocol.Dummy
+        self, synapse: predictionnet.protocol.Challenge
     ) -> typing.Tuple[bool, str]:
         """
         Determines whether an incoming request should be blacklisted and thus ignored. Your implementation should
@@ -74,7 +64,7 @@ class Miner(BaseMinerNeuron):
         requests before they are deserialized to avoid wasting resources on requests that will be ignored.
 
         Args:
-            synapse (template.protocol.Dummy): A synapse object constructed from the headers of the incoming request.
+            synapse (predictionnet.protocol.Challenge): A synapse object constructed from the headers of the incoming request.
 
         Returns:
             Tuple[bool, str]: A tuple containing a boolean indicating whether the synapse's hotkey is blacklisted,
@@ -118,7 +108,7 @@ class Miner(BaseMinerNeuron):
         )
         return False, "Hotkey recognized!"
 
-    async def priority(self, synapse: template.protocol.Dummy) -> float:
+    async def priority(self, synapse: predictionnet.protocol.Challenge) -> float:
         """
         The priority function determines the order in which requests are handled. More valuable or higher-priority
         requests are processed before others. You should design your own priority mechanism with care.
@@ -126,7 +116,7 @@ class Miner(BaseMinerNeuron):
         This implementation assigns priority to incoming requests based on the calling entity's stake in the metagraph.
 
         Args:
-            synapse (template.protocol.Dummy): The synapse object that contains metadata about the incoming request.
+            synapse (predictionnet.protocol.Challenge): The synapse object that contains metadata about the incoming request.
 
         Returns:
             float: A priority score derived from the stake of the calling entity.
@@ -149,6 +139,44 @@ class Miner(BaseMinerNeuron):
             f"Prioritizing {synapse.dendrite.hotkey} with value: ", prirority
         )
         return prirority
+
+    async def forward(
+        self, synapse: predictionnet.protocol.Challenge
+    ) -> predictionnet.protocol.Challenge:
+        """
+        Processes the incoming 'Challenge' synapse by performing a predefined operation on the input data.
+        This method should be replaced with actual logic relevant to the miner's purpose.
+
+        Args:
+            synapse (predictionnet.protocol.Challenge): The synapse object containing the 'Challenge_input' data.
+
+        Returns:
+            predictionnet.protocol.Challenge: The synapse object with the 'Challenge_output' field set to twice the 'Challenge_input' value.
+
+        The 'forward' function is a placeholder and should be overridden with logic that is appropriate for
+        the miner's intended operation. This method demonstrates a basic transformation of input data.
+        """
+        # TODO(developer): Replace with actual implementation logic.
+
+        bt.logging.info(
+            f"Received prediction request from: {synapse.dendrite.hotkey} for timestamp: {synapse.timestamp}"
+        )
+
+        #inputs = [list(input) for input in zip(synapse.timestamp, synapse.open_price, synapse.high_price, synapse.low_price, synapse.volume)]
+
+        #TODO Create predict function to assign prediction to close price & create inputs
+        timestamp = synapse.timestamp
+
+        model = load_model(self.model_dir)
+
+        pred = predict()
+
+        pred_np_array = np.array(pred).reshape(-1, 1)
+
+        # logic to ensure that only past 20 day context exists in synapse
+        synapse.prediction = pred_np_array
+
+        return synapse
 
 
 # This is the main function, which runs the miner.

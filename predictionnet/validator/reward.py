@@ -19,9 +19,12 @@
 
 import torch
 from typing import List
+import bittensor as bt
+from predictionnet.protocol import Challenge
+from datetime import datetime, timedelta
+import yfinance as yf
 
-
-def reward(query: int, response: int) -> float:
+def reward(close_price: float, response: int) -> float:
     """
     Reward the miner response to the dummy request. This method returns a reward
     value for the miner, which is used to update the miner's score.
@@ -30,13 +33,13 @@ def reward(query: int, response: int) -> float:
     - float: The reward value for the miner.
     """
 
-    return 1.0 if response == query * 2 else 0
+    return 1.0 if response == close_price * 2 else 0
 
 # Query prob editied to query: Protocol defined synapse
 # For this method mostly should defer to Rahul/Tommy
 def get_rewards(
     self,
-    query: int,
+    query: Challenge,
     responses: List[float],
 ) -> torch.FloatTensor:
     """
@@ -49,7 +52,24 @@ def get_rewards(
     Returns:
     - torch.FloatTensor: A tensor of rewards for the given query and responses.
     """
+
+    if len(responses) == 0:
+        bt.logging.info("Got no responses. Returning reward tensor of zeros.")
+        return [], torch.zeros_like(0).to(self.device)  # Fallback strategy: Log and return 0.
+    
+    # Prepare to extract close price for this timestamp
+    ticker_symbol = '^GSPC'
+    ticker = yf.Ticker(ticker_symbol)
+
+    timestamp = query.timestamp
+    current_time_adjusted = timestamp - timedelta(minutes=2)
+
+    data = ticker.history(start=current_time_adjusted, end=timestamp, interval='1m')
+    close_price = data['Close'].iloc[-1]
+
+
+    
     # Get all the reward results by iteratively calling your reward() function.
     return torch.FloatTensor(
-        [reward(query, response) for response in responses]
+        [reward(close_price, response) for response in responses]
     ).to(self.device)
