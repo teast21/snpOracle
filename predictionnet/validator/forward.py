@@ -38,7 +38,7 @@ async def forward(self):
     # wait for market to be open
     ny_timezone = timezone('America/New_York')
     current_time_ny = datetime.now(ny_timezone)
-    bt.logging.info("Current time: %s", current_time_ny)
+    bt.logging.info("Current time: ", current_time_ny)
     
     while True:
         if await self.is_market_open(current_time_ny):

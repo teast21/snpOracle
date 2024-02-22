@@ -49,15 +49,18 @@ class Validator(BaseValidatorNeuron):
         
     
     async def is_market_open(self, time):
-        ticker_symbol = '^GSPC'
-        ticker = yf.Ticker(ticker_symbol)
-        adjusted = time - timedelta(minutes=10)
-        data = ticker.history(start=adjusted, end=time, interval='5m')
-        if len(data) < 1: 
-            return False
-        
-        return True
+        ny_open_time = time.replace(hour=9, minute=30, second=0, microsecond=0)
+        ny_close_time = time.replace(hour=16, minute=0, second=0, microsecond=0)
 
+        if time.weekday() < 5 and ny_open_time <= time <= ny_close_time:
+            ticker_symbol = '^GSPC'
+            ticker = yf.Ticker(ticker_symbol)
+            adjusted = time - timedelta(minutes=10)
+            data = ticker.history(start=adjusted, end=time, interval='5m')
+            if len(data) > 0:
+                return True
+        else:
+            return False
 
     async def forward(self):
         """
