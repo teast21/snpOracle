@@ -27,6 +27,7 @@ import yfinance as yf
 from pytz import timezone
 import numpy as np
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
 
 def get_rmse(challenge: List[Challenge], close_price: float) -> float:
     if challenge.prediction is None:
@@ -44,9 +45,19 @@ def reward(response: Challenge, close_price: float) -> float:
     Returns:
     - float: The reward value for the miner.
     """
-    mse = mean_squared_error(response.prediction, close_price)
+    bt.logging.debug(response)
     
-    return mse #1.0 if response == close_price * 2 else 0
+    try:
+        prediction_array = np.array([response.prediction])
+        close_price_array = np.array([close_price])
+
+        mse = mean_squared_error(prediction_array, close_price_array)
+        
+        return mse
+    
+    except ValueError:
+        bt.logging.warning("Where is my prediction bro.? Scoring 0.0")
+        return 0.0
 
 # Query prob editied to query: Protocol defined synapse
 # For this method mostly should defer to Rahul/Tommy
@@ -69,7 +80,9 @@ def get_rewards(
     if len(responses) == 0:
         bt.logging.info("Got no responses. Returning reward tensor of zeros.")
         return [], torch.zeros_like(0).to(self.device)  # Fallback strategy: Log and return 0.
-    
+    else:
+        bt.logging.debug(responses)
+
     # Prepare to extract close price for this timestamp
     ticker_symbol = '^GSPC'
     ticker = yf.Ticker(ticker_symbol)
@@ -92,8 +105,20 @@ def get_rewards(
 
     data = ticker.history(start=current_time_adjusted, end=timestamp, interval='5m')
     close_price = data['Close'].iloc[-1]
-    
+   
+    bt.logging.info("Revealing close price for this interval: ", close_price)
+
     # Get all the reward results by iteratively calling your reward() function.
-    return torch.FloatTensor(
-        [reward(close_price, response) for response in responses]
-    ).to(self.device)
+    scoring = [reward(response, close_price) for response in responses]
+    
+    bt.logging.debug(scoring)
+
+    scaler = MinMaxScaler(feature_range=(0,1))
+
+    bt.logging.debug(np.array(scoring))
+    bt.logging.debug(np.array(scoring).reshape(-1,1))
+    bt.logging.debug(scaler.fit_transform(np.array(scoring).reshape(-1,1)).flatten())
+
+    return torch.FloatTensor(scaler.fit_transform(np.array(scoring).reshape(-1, 1)).flatten()).to(self.device)
+
+

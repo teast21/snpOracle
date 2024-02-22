@@ -48,8 +48,7 @@ async def forward(self):
             bt.logging.info("Market is closed. Sleeping for 1 minutes...")
             time.sleep(60)  # Sleep for 5 minutes before checking again
     
-    # Added min function to confirm the # of uids never increases beyond the amount of miners available
-    # Where does config come from?? 
+
     miner_uids = get_random_uids(self, k=min(self.config.neuron.sample_size, self.metagraph.n.item()))
 
     # Here input data should be gathered to send to the miners
