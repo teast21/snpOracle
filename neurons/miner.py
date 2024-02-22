@@ -173,7 +173,7 @@ class Miner(BaseMinerNeuron):
         scaler, _, _ = scale_data(data)
         #mse = create_and_save_base_model(scaler, X, y)
         prediction = predict(scaler, model)
-
+        
         #pred_np_array = np.array(prediction).reshape(-1, 1)
 
         # logic to ensure that only past 20 day context exists in synapse

@@ -1,6 +1,8 @@
 import numpy as np
+
 from base_miner.get_data import prep_data, scale_data, round_down_time
 from base_miner.model import create_and_save_base_model
+
 from tensorflow.keras.models import load_model
 
 def predict(scaler, model):
@@ -16,3 +18,13 @@ def predict(scaler, model):
     prediction = scaler.inverse_transform(prediction)
 
     return prediction
+
+if(__name__=='__main__'):
+    data = prep_data()
+    scaler, X, y = scale_data(data)
+    #mse = create_and_save_base_model(scaler, X, y)
+    prediction = predict(scaler)
+    print(prediction)
+    
+
+

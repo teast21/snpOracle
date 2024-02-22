@@ -39,5 +39,6 @@ def create_and_save_base_model(scaler, X_scaled, y_scaled):
     # Evaluate
     mse = mean_squared_error(y_test_rescaled, predicted_prices)
     print(f'Mean Squared Error: {mse}')
-
+    
     return mse
+
