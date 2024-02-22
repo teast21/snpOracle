@@ -26,6 +26,7 @@ from datetime import datetime, timedelta
 import yfinance as yf
 from pytz import timezone
 import numpy as np
+from sklearn.metrics import mean_squared_error
 
 def get_rmse(challenge: List[Challenge], close_price: float) -> float:
     if challenge.prediction is None:
@@ -43,7 +44,9 @@ def reward(response: Challenge, close_price: float) -> float:
     Returns:
     - float: The reward value for the miner.
     """
-    return 1.0 if response == close_price * 2 else 0
+    mse = mean_squared_error(response.prediction, close_price)
+    
+    return mse #1.0 if response == close_price * 2 else 0
 
 # Query prob editied to query: Protocol defined synapse
 # For this method mostly should defer to Rahul/Tommy
@@ -89,7 +92,6 @@ def get_rewards(
 
     data = ticker.history(start=current_time_adjusted, end=timestamp, interval='5m')
     close_price = data['Close'].iloc[-1]
-    rmse = get_rmse(responses, close_price)
     
     # Get all the reward results by iteratively calling your reward() function.
     return torch.FloatTensor(
