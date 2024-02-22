@@ -22,6 +22,7 @@ from predictionnet.utils.uids import get_random_uids
 
 from datetime import datetime
 import time
+from pytz import timezone
 
 
 async def forward(self):
@@ -35,13 +36,17 @@ async def forward(self):
     # get_random_uids is an example method, but you can replace it with your own.
     
     # wait for market to be open
+    ny_timezone = timezone('America/New_York')
+    current_time_ny = datetime.now(ny_timezone)
+    bt.logging.info("Current time: ", current_time_ny)
+    
     while True:
-        if await self.is_market_open(datetime.now()):
+        if await self.is_market_open(current_time_ny):
             bt.logging.info("Market is open. Begin processes requests")
             break  # Exit the loop if market is open
         else:
-            bt.logging.info("Market is closed. Sleeping for 5 minutes...")
-            time.sleep(300)  # Sleep for 5 minutes before checking again
+            bt.logging.info("Market is closed. Sleeping for 1 minutes...")
+            time.sleep(60)  # Sleep for 5 minutes before checking again
     
     # Added min function to confirm the # of uids never increases beyond the amount of miners available
     # Where does config come from?? 
@@ -49,7 +54,9 @@ async def forward(self):
 
     # Here input data should be gathered to send to the miners
     # TODO(create get_input_data())
-    timestamp = datetime.now()
+    
+    current_time_ny = datetime.now(ny_timezone)
+    timestamp = current_time_ny.isoformat()
 
     # Build synapse for request
     # Replace dummy_input with actually defined variables in protocol.py

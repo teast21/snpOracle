@@ -1,4 +1,4 @@
-from get_data import prep_data
+from base_miner.get_data import prep_data
 
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
@@ -39,5 +39,6 @@ def create_and_save_base_model(scaler, X_scaled, y_scaled):
     # Evaluate
     mse = mean_squared_error(y_test_rescaled, predicted_prices)
     print(f'Mean Squared Error: {mse}')
-
+    
     return mse
+

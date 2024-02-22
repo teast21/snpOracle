@@ -24,8 +24,18 @@ from predictionnet.protocol import Challenge
 import time
 from datetime import datetime, timedelta
 import yfinance as yf
+from pytz import timezone
+import numpy as np
 
-def reward(close_price: float, response: int) -> float:
+def get_rmse(challenge: List[Challenge], close_price: float) -> float:
+    if challenge.prediction is None:
+        raise ValueError("Where is my prediction bro.?")
+    prediction_arr = np.array([c.prediction for c in challenge])
+    squared_error = (prediction_arr - close_price) ** 2
+    rmse = squared_error ** 0.5
+    return rmse
+    
+def reward(response: Challenge, close_price: float) -> float:
     """
     Reward the miner response to the dummy request. This method returns a reward
     value for the miner, which is used to update the miner's score.
@@ -33,7 +43,6 @@ def reward(close_price: float, response: int) -> float:
     Returns:
     - float: The reward value for the miner.
     """
-
     return 1.0 if response == close_price * 2 else 0
 
 # Query prob editied to query: Protocol defined synapse
@@ -41,15 +50,15 @@ def reward(close_price: float, response: int) -> float:
 def get_rewards(
     self,
     query: Challenge,
-    responses: List[float],
+    responses: List[Challenge],
 ) -> torch.FloatTensor:
     """
     Returns a tensor of rewards for the given query and responses.
 
     Args:
     - query (int): The query sent to the miner.
-    - responses (List[float]): A list of responses from the miner.
-
+    - responses (List[Challenge]): A list of responses from the miner.
+    
     Returns:
     - torch.FloatTensor: A tensor of rewards for the given query and responses.
     """
@@ -63,13 +72,16 @@ def get_rewards(
     ticker = yf.Ticker(ticker_symbol)
 
     timestamp = query.timestamp
+    timestamp = datetime.fromisoformat(timestamp)
 
     # Round up current timestamp and then wait until that time has been hit
     rounded_up_time = timestamp - timedelta(minutes=timestamp.minute % 5,
                                     seconds=timestamp.second,
                                     microseconds=timestamp.microsecond) + timedelta(minutes=5)
     
-    while (datetime.now() < rounded_up_time):
+    ny_timezone = timezone('America/New_York')
+
+    while (datetime.now(ny_timezone) < rounded_up_time):
         bt.logging.info("Waiting for next 5m interval...")
         time.sleep(15)
 
@@ -77,8 +89,7 @@ def get_rewards(
 
     data = ticker.history(start=current_time_adjusted, end=timestamp, interval='5m')
     close_price = data['Close'].iloc[-1]
-
-
+    rmse = get_rmse(responses, close_price)
     
     # Get all the reward results by iteratively calling your reward() function.
     return torch.FloatTensor(

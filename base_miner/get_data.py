@@ -48,4 +48,3 @@ def scale_data(data):
     y_scaled = scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
 
     return scaler, X_scaled, y_scaled
-

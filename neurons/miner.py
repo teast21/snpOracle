@@ -173,11 +173,15 @@ class Miner(BaseMinerNeuron):
         scaler, _, _ = scale_data(data)
         #mse = create_and_save_base_model(scaler, X, y)
         prediction = predict(scaler, model)
-
-        pred_np_array = np.array(prediction).reshape(-1, 1)
+        
+        #pred_np_array = np.array(prediction).reshape(-1, 1)
 
         # logic to ensure that only past 20 day context exists in synapse
-        synapse.prediction = pred_np_array
+        synapse.prediction = prediction
+        
+        bt.logging.info(
+            f"Predicted price: {synapse.prediction}"
+        )
 
         return synapse
 
@@ -188,3 +192,4 @@ if __name__ == "__main__":
         while True:
             bt.logging.info("Miner running...", time.time())
             time.sleep(5)
+
