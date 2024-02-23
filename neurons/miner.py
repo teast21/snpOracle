@@ -172,7 +172,7 @@ class Miner(BaseMinerNeuron):
         data = prep_data()
         scaler, _, _ = scale_data(data)
         #mse = create_and_save_base_model(scaler, X, y)
-        prediction = predict(scaler, model)
+        prediction = predict(timestamp, scaler, model)
         
         #pred_np_array = np.array(prediction).reshape(-1, 1)
 
