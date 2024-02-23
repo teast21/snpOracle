@@ -29,13 +29,13 @@ import numpy as np
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 
-def get_rmse(challenge: List[Challenge], close_price: float) -> float:
-    if challenge.prediction is None:
-        raise ValueError("Where is my prediction bro.?")
-    prediction_arr = np.array([c.prediction for c in challenge])
-    squared_error = (prediction_arr - close_price) ** 2
-    rmse = squared_error ** 0.5
-    return rmse
+# def get_rmse(challenge: List[Challenge], close_price: float) -> float:
+#     if challenge.prediction is None:
+#         raise ValueError("Where is my prediction bro.?")
+#     prediction_arr = np.array([c.prediction for c in challenge])
+#     squared_error = (prediction_arr - close_price) ** 2
+#     rmse = squared_error ** 0.5
+#     return rmse
     
 def reward(response: Challenge, close_price: float) -> float:
     """
@@ -44,9 +44,7 @@ def reward(response: Challenge, close_price: float) -> float:
 
     Returns:
     - float: The reward value for the miner.
-    """
-    bt.logging.debug(response)
-    
+    """    
     try:
         prediction_array = np.array([response.prediction])
         close_price_array = np.array([close_price])
@@ -56,7 +54,6 @@ def reward(response: Challenge, close_price: float) -> float:
         return mse
     
     except ValueError:
-        bt.logging.warning("Where is my prediction bro.? Scoring 0.0")
         return 0.0
 
 # Query prob editied to query: Protocol defined synapse
@@ -80,8 +77,6 @@ def get_rewards(
     if len(responses) == 0:
         bt.logging.info("Got no responses. Returning reward tensor of zeros.")
         return [], torch.zeros_like(0).to(self.device)  # Fallback strategy: Log and return 0.
-    else:
-        bt.logging.debug(responses)
 
     # Prepare to extract close price for this timestamp
     ticker_symbol = '^GSPC'
@@ -110,14 +105,8 @@ def get_rewards(
 
     # Get all the reward results by iteratively calling your reward() function.
     scoring = [reward(response, close_price) for response in responses]
-    
-    bt.logging.debug(scoring)
 
     scaler = MinMaxScaler(feature_range=(0,1))
-
-    bt.logging.debug(np.array(scoring))
-    bt.logging.debug(np.array(scoring).reshape(-1,1))
-    bt.logging.debug(scaler.fit_transform(np.array(scoring).reshape(-1,1)).flatten())
 
     return torch.FloatTensor(scaler.fit_transform(np.array(scoring).reshape(-1, 1)).flatten()).to(self.device)
 

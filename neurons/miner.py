@@ -185,6 +185,10 @@ class Miner(BaseMinerNeuron):
 
         return synapse
 
+    def save_state(self):
+        pass
+    def load_state(self):
+        pass
 
 # This is the main function, which runs the miner.
 if __name__ == "__main__":

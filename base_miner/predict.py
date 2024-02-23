@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 from pytz import timezone
 import yfinance as yf
 
-from get_data import prep_data, scale_data, round_down_time
+from base_miner.get_data import prep_data, scale_data, round_down_time
 
 from tensorflow.keras.models import load_model
 
