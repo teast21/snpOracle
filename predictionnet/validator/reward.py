@@ -54,7 +54,7 @@ def reward(response: Challenge, close_price: float) -> float:
         return mse
     
     except ValueError:
-        return 0.0
+        return 100000.0
 
 # Query prob editied to query: Protocol defined synapse
 # For this method mostly should defer to Rahul/Tommy
@@ -105,9 +105,11 @@ def get_rewards(
 
     # Get all the reward results by iteratively calling your reward() function.
     scoring = [reward(response, close_price) for response in responses]
+    worst_loss = max(scoring)
+    scoring = [1 - (score / worst_loss) for score in scoring]
+    return torch.FloatTensor(scoring)
 
-    scaler = MinMaxScaler(feature_range=(0,1))
-
-    return torch.FloatTensor(scaler.fit_transform(np.array(scoring).reshape(-1, 1)).flatten()).to(self.device)
+    #scaler = MinMaxScaler(feature_range=(0,1))
+    #return torch.FloatTensor(scaler.fit_transform(np.array(scoring).reshape(-1, 1)).flatten()).to(self.device)
 
 
