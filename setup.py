@@ -63,7 +63,7 @@ with codecs.open(
     version_string = version_match.group(1)
 
 setup(
-    name="bittensor_subnet_template",  # TODO(developer): Change this value to your module subnet name.
+    name="predictionnet",  # TODO(developer): Change this value to your module subnet name.
     version=version_string,
     description="bittensor_subnet_template",  # TODO(developer): Change this value to your module subnet description.
     long_description=long_description,
