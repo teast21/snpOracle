@@ -23,11 +23,11 @@ def prep_data(drop_na=True):
     if(drop_na):
         data.dropna(inplace=True)
 
+    data.reset_index(inplace=True)
+
     return data
 
-def round_down_time(unix_timestamp, interval_minutes=5):
-    # Convert the Unix timestamp to a datetime object
-    dt = datetime.utcfromtimestamp(unix_timestamp)
+def round_down_time(dt, interval_minutes=5):
 
     # Round down the time to the nearest interval
     rounded_dt = dt - timedelta(minutes=dt.minute % interval_minutes,
