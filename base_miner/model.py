@@ -1,12 +1,37 @@
-from base_miner.get_data import prep_data
+# developer: Foundry Digital
+# Copyright © 2023 Foundry Digital
 
+# Import necessary modules to use for model creation - can be downloaded using pip
+import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 
-def create_and_save_base_model(scaler, X_scaled, y_scaled):
+def create_and_save_base_model(scaler:MinMaxScaler, X_scaled:np.ndarray, y_scaled:np.ndarray) -> float:
+    """
+    Base model that can be created for predicting the S&P 500 close price
+
+    The function creates a base model, given a scaler, inputs and outputs, and
+    stores the model weights as a .h5 file in the mining_models/ folder. The model
+    architecture and model name given now is a placeholder, can (and should)
+    be changed by miners to build more robust models.
+
+    Input:
+        :param scaler: The scaler used to scale the inputs during model training process
+        :type scaler: sklearn.preprocessing.MinMaxScaler
+
+        :param X_scaled: The already scaled input data that will be used by the model to train and test
+        :type X_scaled: np.ndarray
+
+        :param y_scaled: The already scaled output data that will be used by the model to train and test
+        :type y_scaled: np.ndarray
+    
+    Output:
+        :returns: The MSE of the model on the test data
+        :rtype: float
+    """
     model_name = "mining_models/base_lstm"
 
     # Reshape input for LSTM
@@ -15,7 +40,9 @@ def create_and_save_base_model(scaler, X_scaled, y_scaled):
     # Split data into training and testing
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_scaled, test_size=0.2, random_state=42)
 
-    # LSTM model
+    # LSTM model - all hyperparameters are baseline params - should be changed according to your required
+    # architecture. LSTMs are also not the only way to do this, can be done using any algo deemed fit by
+    # the creators of the miner.
     model = Sequential()
     model.add(LSTM(units=50, return_sequences=True, input_shape=(X_scaled.shape[1], X_scaled.shape[2])))
     model.add(Dropout(0.2))
@@ -29,7 +56,9 @@ def create_and_save_base_model(scaler, X_scaled, y_scaled):
     # Train the model
     model.fit(X_train, y_train, epochs=100, batch_size=32)
     model.save(f'{model_name}.h5')
-    # Predict
+
+    # Predict the prices - this is just for a local test, this prediction just allows
+    # miners to assess the performance of their models on real data.
     predicted_prices = model.predict(X_test)
 
     # Rescale back to original range

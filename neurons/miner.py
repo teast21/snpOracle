@@ -1,7 +1,7 @@
 # The MIT License (MIT)
 # Copyright © 2023 Yuma Rao
-# TODO(developer): Set your name
-# Copyright © 2023 <your name>
+# developer: Foundry Digital
+# Copyright © 2023 Foundry Digital
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -157,15 +157,10 @@ class Miner(BaseMinerNeuron):
         The 'forward' function is a placeholder and should be overridden with logic that is appropriate for
         the miner's intended operation. This method demonstrates a basic transformation of input data.
         """
-        # TODO(developer): Replace with actual implementation logic.
-
         bt.logging.info(
             f"Received prediction request from: {synapse.dendrite.hotkey} for timestamp: {synapse.timestamp}"
         )
 
-        #inputs = [list(input) for input in zip(synapse.timestamp, synapse.open_price, synapse.high_price, synapse.low_price, synapse.volume)]
-
-        #TODO Create predict function to assign prediction to close price & create inputs
         timestamp = synapse.timestamp
 
         model = load_model(self.model_dir)
