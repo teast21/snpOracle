@@ -1,9 +1,9 @@
 module.exports = {
   apps: [
     {
-      name: 'test-miner',
+      name: 'miner',
       script: 'python3',
-      args: './neurons/miner.py --axon.port 8092 --wallet.name testMiner --wallet.hotkey default --netuid 93 --logging.debug --logging.trace --subtensor.network test'
+      args: './neurons/miner.py --axon.port <PORT> --wallet.name <WALLET_NAME> --wallet.hotkey <HOTKEY_NAME> --netuid 93 --logging.debug --logging.trace --subtensor.network finney'
     },
   ],
 };
