@@ -1,9 +1,9 @@
 module.exports = {
   apps: [
     {
-      name: 'test-validator',
+      name: 'validator',
       script: 'python3',
-      args: './neurons/validator.py --wallet.name testValidator --wallet.hotkey default --netuid 93 --logging.debug --logging.trace --subtensor.network test'
+      args: './neurons/validator.py --wallet.name <WALLET_NAME> --wallet.hotkey <HOTKEY_NAME> --netuid 93 --logging.debug --logging.trace --subtensor.network finney'
     },
   ],
 };
