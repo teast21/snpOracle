@@ -16,6 +16,7 @@
   - [Install PM2](#install-pm2)
   - [Install PredictionNet](#install-predictionnet)
 - [About the Rewards Mechanism](#about-the-rewards-mechanism)
+- [Road Map](#road-map)
 - [License](#license)
 
 ---
@@ -115,6 +116,18 @@ Root Mean Squared Error(RMSE) is calculated as such:
 The RMSE is then normalized to enforce scores between 0 and 1, and those scores are used to update the existing scores in the metagraph. The weighting function applied to how scores are added to the metagraph creates a pseudo-rolling average score for predictions. Thus, a miner will have perfect trust after a perfect prediction, and will also not have 0 trust after having the worst prediction of an epoch. Consistent high-quality performance will result in high trust, and consistent low-quality performance will result in low trust and eventual de-registration. 
 
 ---
+
+## Roadmap
+
+Foundry will constantly work to make this subnet more robust, with the north star of creating end-user utility in mind. Some key features we are focused on rolling out to improve PredictionNet are listed here:
+[] Huggingface Integration
+[] Wandb Integration
+[] Add Features to Rewards Mechanism
+[] Altering Synapse to hold short term history of predictions
+[] Add new Synapse type for Inference Requests
+[] Front end for end-user access
+
+We happily accept community feedback and features suggestions. Please reach out to @0xthebom on discord :-)
 
 ## License
 This repository is licensed under the MIT License.
