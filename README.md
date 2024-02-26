@@ -1,121 +1,117 @@
 <div align="center">
 
-# **Bittensor Subnet Template** <!-- omit in toc -->
-[![Discord Chat](https://img.shields.io/discord/308323056592486420.svg)](https://discord.gg/bittensor)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+# **PredictionNet** <!-- omit in toc -->
+## Foundry Accelerate <!-- omit in toc -->
 
----
-
-## The Incentivized Internet <!-- omit in toc -->
-
-[Discord](https://discord.gg/bittensor) • [Network](https://taostats.io/) • [Research](https://bittensor.com/whitepaper)
+[Website](https://foundrydigital.com/accelerate/) • [Validator](https://taostats.io/validators/foundry/) • [Twitter](https://x.com/FoundryServices?s=20)
 </div>
 
 ---
-- [Quickstarter template](#quickstarter-template)
 - [Introduction](#introduction)
-  - [Example](#example)
+- [Design Decisions](#design-decisions)
 - [Installation](#installation)
-  - [Before you proceed](#before-you-proceed)
-  - [Install](#install)
-- [Writing your own incentive mechanism](#writing-your-own-incentive-mechanism)
-- [Subnet Links](#subnet-links)
+  - [Install PM2](#install-pm2)
+  - [Install PredictionNet](#install-predictionnet)
+- [About the Rewards Mechanism](#about-the-rewards-mechanism)
 - [License](#license)
 
 ---
-## Quickstarter template
-
-This template contains all the required installation instructions, scripts, and files and functions for:
-- Building Bittensor subnets.
-- Creating custom incentive mechanisms and running these mechanisms on the subnets. 
-
-In order to simplify the building of subnets, this template abstracts away the complexity of the underlying blockchain and other boilerplate code. While the default behavior of the template is sufficient for a simple subnet, you should customize the template in order to meet your specific requirements.
----
-
 ## Introduction
 
-**IMPORTANT**: If you are new to Bittensor subnets, read this section before proceeding to [Installation](#installation) section. 
-
-The Bittensor blockchain hosts multiple self-contained incentive mechanisms called **subnets**. Subnets are playing fields in which:
-- Subnet miners who produce value, and
-- Subnet validators who produce consensus
-
-determine together the proper distribution of TAO for the purpose of incentivizing the creation of value, i.e., generating digital commodities, such as intelligence or data. 
-
-Each subnet consists of:
-- Subnet miners and subnet validators.
-- A protocol using which the subnet miners and subnet validators interact with one another. This protocol is part of the incentive mechanism.
-- The Bittensor API using which the subnet miners and subnet validators interact with Bittensor's onchain consensus engine [Yuma Consensus](https://bittensor.com/documentation/validating/yuma-consensus). The Yuma Consensus is designed to drive these actors: subnet validators and subnet miners, into agreement on who is creating value and what that value is worth. 
-
-This starter template is split into three primary files. To write your own incentive mechanism, you should edit these files. These files are:
-1. `template/protocol.py`: Contains the definition of the protocol used by subnet miners and subnet validators.
-2. `neurons/miner.py`: Script that defines the subnet miner's behavior, i.e., how the subnet miner responds to requests from subnet validators.
-3. `neurons/validator.py`: This script defines the subnet validator's behavior, i.e., how the subnet validator requests information from the subnet miners and determines the scores.
-
-### Example
-
-The Bittensor Subnet 1 for Text Prompting is built using this template. See [Bittensor Text-Prompting](https://github.com/opentensor/text-prompting) for how to configure the files and how to add monitoring and telemetry and support multiple miner types. Also see this Subnet 1 in action on [Taostats](https://taostats.io/subnets/netuid-1/) explorer.
+Foundry is launching Foundry PredictionNet to incentivize miners to make predictions on the S&P 500 price frequently throughout trading hours. Validators send miners a timestamp (a future time) for which the miners need to make an S&P 500 price prediction for. Miners need to respond with their prediction for the price of the S&P 500 at the given time. Validators store the miner predictions, and then calculate the scores of the miners after the predictions mature. Miners are ranked against eachother, naturally incentivizing competition between the miners. 
 
 ---
+## Design-Decisions
 
+A Bittensor integration into financial markets will expose Bittensor to the largest system in the world; the global economy. The S&P 500 serves as a perfect starting place for financial predictions given its utility and name recognition. Financial market predictions were chosen for three main reasons:
+1) __Utility:__ financial markets provide a massive userbase of professional traders, wealth managers, and individuals alike
+2) __Objective Rewards Mechanism:__ by tying the rewards mechanism to an external source of truth (yahoo finance's S&P Price), the defensibility of the subnet regarding gamification is quite strong.
+3) __Adversarial Environment:__ the adversarial environment, especially given the rewards mechanism, will allow for significant diversity of models. Miners will be driven to acquire different datasets, implement different training methods, and utilize different model architectures in order to develop the most performant models. 
+---
 ## Installation
-
-### Before you proceed
-Before you proceed with the installation of the subnet, note the following: 
-
-- Use these instructions to run your subnet locally for your development and testing, or on Bittensor testnet or on Bittensor mainnet. 
-- **IMPORTANT**: We **strongly recommend** that you first run your subnet locally and complete your development and testing before running the subnet on Bittensor testnet. Furthermore, make sure that you next run your subnet on Bittensor testnet before running it on the Bittensor mainnet.
-- You can run your subnet either as a subnet owner, or as a subnet validator or as a subnet miner. 
-- **IMPORTANT:** Make sure you are aware of the minimum compute requirements for your subnet. See the [Minimum compute YAML configuration](./min_compute.yml).
-- Note that installation instructions differ based on your situation: For example, installing for local development and testing will require a few additional steps compared to installing for testnet. Similarly, installation instructions differ for a subnet owner vs a validator or a miner. 
-
-### Install
-
-- **Running locally**: Follow the step-by-step instructions described in this section: [Running Subnet Locally](./docs/running_on_staging.md).
-- **Running on Bittensor testnet**: Follow the step-by-step instructions described in this section: [Running on the Test Network](./docs/running_on_testnet.md).
-- **Running on Bittensor mainnet**: Follow the step-by-step instructions described in this section: [Running on the Main Network](./docs/running_on_mainnet.md).
-
----
-
-## Writing your own incentive mechanism
-
-As described in [Quickstarter template](#quickstarter-template) section above, when you are ready to write your own incentive mechanism, update this template repository by editing the following files. The code in these files contains detailed documentation on how to update the template. Read the documentation in each of the files to understand how to update the template. There are multiple **TODO**s in each of the files identifying sections you should update. These files are:
-- `template/protocol.py`: Contains the definition of the wire-protocol used by miners and validators.
-- `neurons/miner.py`: Script that defines the miner's behavior, i.e., how the miner responds to requests from validators.
-- `neurons/validator.py`: This script defines the validator's behavior, i.e., how the validator requests information from the miners and determines the scores.
-- `template/forward.py`: Contains the definition of the validator's forward pass.
-- `template/reward.py`: Contains the definition of how validators reward miner responses.
-
-In addition to the above files, you should also update the following files:
-- `README.md`: This file contains the documentation for your project. Update this file to reflect your project's documentation.
-- `CONTRIBUTING.md`: This file contains the instructions for contributing to your project. Update this file to reflect your project's contribution guidelines.
-- `template/__init__.py`: This file contains the version of your project.
-- `setup.py`: This file contains the metadata about your project. Update this file to reflect your project's metadata.
-- `docs/`: This directory contains the documentation for your project. Update this directory to reflect your project's documentation.
-
-__Note__
-The `template` directory should also be renamed to your project name.
----
-
-# Subnet Links
-In order to see real-world examples of subnets in-action, see the `subnet_links.json` document or access them from inside the `template` package by:
-```python
-import template
-template.SUBNET_LINKS
-[{'name': 'sn0', 'url': ''},
- {'name': 'sn1', 'url': 'https://github.com/opentensor/text-prompting/'},
- {'name': 'sn2', 'url': 'https://github.com/bittranslateio/bittranslate/'},
- {'name': 'sn3', 'url': 'https://github.com/gitphantomman/scraping_subnet/'},
- {'name': 'sn4', 'url': 'https://github.com/manifold-inc/targon/'},
-...
-]
+### Install-PM2
+First, install PM2:
 ```
+sudo apt update
+sudo apt install nodejs npm
+sudo npm install pm2@latest -g
+```
+Verify installation:
+```
+pm2 --version
+```
+
+### Install-PredictionNet
+
+Begin by creating and sourcing a python virtual environment:
+```
+python3 -m venv .snX
+source .snX/bin/activate
+```
+Clone the Foundry PredictionNet repo:
+```
+git clone https://github.com/teast21/predictionnet.git
+```
+Install Requirements:
+```
+pip3 -e install predictionnet
+```
+
+### Running a Miner
+ecosystem.config.js files have been created to make deployment of miners and validators easier for the node operator. These files are the default configuration files for PM2, and allow the user to define the environment & application in a cleaner way. IMPORTANT: Make sure your have activated your virtual environment before running your validator/miner. 
+To run your miner:
+```
+pm2 start miner.config.js
+```
+The miner.config.js has few flags added. Any standard flags can be passed, for example, wallet name and hotkey name will default to "default"; if you have a different configuration, edit your "args" in miner.config.js. Below shows a miner.config.js with extra configuration flags. 
+```
+module.exports = {
+  apps: [
+    {
+      name: 'miner',
+      script: 'python3',
+      args: './neurons/miner.py --netuid X --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName --axon.port 8000'
+    },
+  ],
+};
+```
+### Running a Validator
+ecosystem.config.js files have been created to make deployment of miners and validators easier for the node operator. These files are the default configuration files for PM2, and allow the user to define the environment & application in a cleaner way. IMPORTANT: Make sure your have activated your virtual environment before running your validator/miner. 
+
+To run your validator:
+```
+pm2 start validator.config.js
+```
+
+The validator.config.js has few flags added. Any standard flags can be passed, for example, wallet name and hotkey name will default to "default"; if you have a different configuration, edit your "args" in miner.config.js. Below shows a miner.config.js with extra configuration flags. 
+```
+module.exports = {
+  apps: [
+    {
+      name: 'validator',
+      script: 'python3',
+      args: './neurons/validator.py --netuid X --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName'
+    },
+  ],
+};
+```
+
+## About the Rewards Mechanism
+
+The simplicity of the rewards mechanism is quite intentional. There are no methods to require a machine learning model be run by the miners. This is because the nature of the problem is such that machine learning models will inherently perform better than any method of gamification. By effectively performing a commit-reveal on a future S&P Price Prediction, PredictionNet ensures that only well-tuned models will survive. 
+
+Root Mean Squared Error(RMSE) is calculated as such:
+![image](https://github.com/teast21/predictionnet/assets/109384972/214b9b12-2563-498c-8f06-956c9f9ee7b0)
+
+The RMSE is then normalized to enforce scores between 0 and 1, and those scores are used to update the existing scores in the metagraph. The weighting function applied to how scores are added to the metagraph creates a pseudo-rolling average score for predictions. Thus, a miner will have perfect trust after a perfect prediction, and will also not have 0 trust after having the worst prediction of an epoch. Consistent high-quality performance will result in high trust, and consistent low-quality performance will result in low trust and eventual de-registration. 
+
+---
 
 ## License
 This repository is licensed under the MIT License.
 ```text
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
+# Copyright © 2024 Foundry Digital
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
