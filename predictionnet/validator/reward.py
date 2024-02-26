@@ -51,7 +51,7 @@ def reward(response: Challenge, close_price: float) -> float:
 
         mse = mean_squared_error(prediction_array, close_price_array)
         
-        return mse
+        return mse**0.5
     
     except ValueError:
         return 100000.0
