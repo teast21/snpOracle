@@ -41,6 +41,7 @@ async def forward(self):
     bt.logging.info("Current time: ", current_time_ny)
     
     while True:
+        current_time_ny = datetime.now(ny_timezone)
         if await self.is_market_open(current_time_ny):
             bt.logging.info("Market is open. Begin processes requests")
             break  # Exit the loop if market is open
