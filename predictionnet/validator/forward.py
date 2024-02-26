@@ -20,7 +20,7 @@ from predictionnet.protocol import Challenge
 from predictionnet.validator.reward import get_rewards
 from predictionnet.utils.uids import get_random_uids
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from pytz import timezone
 
@@ -41,13 +41,17 @@ async def forward(self):
     bt.logging.info("Current time: ", current_time_ny)
     
     while True:
-        current_time_ny = datetime.now(ny_timezone)
-        if await self.is_market_open(current_time_ny):
+        current_time = datetime.now(ny_timezone)
+        if await self.is_market_open(current_time):
             bt.logging.info("Market is open. Begin processes requests")
             break  # Exit the loop if market is open
         else:
-            bt.logging.info("Market is closed. Sleeping for 1 minutes...")
-            time.sleep(60)  # Sleep for 5 minutes before checking again
+            bt.logging.info("Market is closed. Sleeping for 5 minutes...")
+            time.sleep(300)  # Sleep for 5 minutes before checking again
+
+            if datetime.now(ny_timezone) - current_time_ny >= timedelta(hours=1):
+                self.set_weights()
+                current_time_ny = datetime.now(ny_timezone)
     
 
     miner_uids = get_random_uids(self, k=min(self.config.neuron.sample_size, self.metagraph.n.item()))
