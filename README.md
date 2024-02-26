@@ -1,6 +1,9 @@
 <div align="center">
 
-# **PredictionNet** <!-- omit in toc -->
+# **Foundry PredictionNet** <!-- omit in toc -->
+---
+---
+---
 ## Foundry Accelerate <!-- omit in toc -->
 
 [Website](https://foundrydigital.com/accelerate/) • [Validator](https://taostats.io/validators/foundry/) • [Twitter](https://x.com/FoundryServices?s=20)
@@ -40,6 +43,12 @@ Verify installation:
 ```
 pm2 --version
 ```
+### Compute Requirements
+
+| Validator |   Miner   |
+|---------- |-----------|
+|  8gb RAM  |  8gb RAM  | 
+|  2 vCPUs  |  2 vCPUs  | 
 
 ### Install-PredictionNet
 
