@@ -21,7 +21,7 @@
 Foundry is launching Foundry PredictionNet to incentivize miners to make predictions on the S&P 500 price frequently throughout trading hours. Validators send miners a timestamp (a future time) for which the miners need to make an S&P 500 price prediction for. Miners need to respond with their prediction for the price of the S&P 500 at the given time. Validators store the miner predictions, and then calculate the scores of the miners after the predictions mature. Miners are ranked against eachother, naturally incentivizing competition between the miners. 
 
 ---
-## Design-Decisions
+## Design Decisions
 
 A Bittensor integration into financial markets will expose Bittensor to the largest system in the world; the global economy. The S&P 500 serves as a perfect starting place for financial predictions given its utility and name recognition. Financial market predictions were chosen for three main reasons:
 1) __Utility:__ financial markets provide a massive userbase of professional traders, wealth managers, and individuals alike
@@ -29,7 +29,7 @@ A Bittensor integration into financial markets will expose Bittensor to the larg
 3) __Adversarial Environment:__ the adversarial environment, especially given the rewards mechanism, will allow for significant diversity of models. Miners will be driven to acquire different datasets, implement different training methods, and utilize different model architectures in order to develop the most performant models. 
 ---
 ## Installation
-### Install-PM2
+### Install PM2
 First, install PM2:
 ```
 sudo apt update
