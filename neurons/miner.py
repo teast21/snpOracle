@@ -166,8 +166,11 @@ class Miner(BaseMinerNeuron):
         model = load_model(self.model_dir)
         data = prep_data()
         scaler, _, _ = scale_data(data)
-        #mse = create_and_save_base_model(scaler, X, y)
-        prediction = predict(timestamp, scaler, model)
+        #mse = create_and_save_base_model_lstm(scaler, X, y)
+
+        # type needs to be changed based on the algo you're running
+        # any algo specific change logic can be added to predict function in predict.py
+        prediction = predict(timestamp, scaler, model, type='lstm') 
         
         #pred_np_array = np.array(prediction).reshape(-1, 1)
 
