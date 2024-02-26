@@ -3,18 +3,19 @@
 
 # Import modules that already exist or can be installed using pip
 from datetime import datetime
+import joblib
 import numpy as np
 import pandas as pd
 from pytz import timezone
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import load_model
-import yfinance as yf
+from model import create_and_save_base_model_lstm, create_and_save_base_model_regression
 
 # import custom defined files
-from base_miner.get_data import prep_data, scale_data, round_down_time
+from get_data import prep_data, scale_data, round_down_time
 
 
-def predict(timestamp:datetime, scaler:MinMaxScaler, model) -> float:
+def predict(timestamp:datetime, scaler:MinMaxScaler, model, type) -> float:
     """
     Predicts the close price of the next 5m interval
 
@@ -59,29 +60,33 @@ def predict(timestamp:datetime, scaler:MinMaxScaler, model) -> float:
     # data.to_csv('mining_models/base_miner_data.csv')
     input = matching_row[['Open', 'High', 'Low', 'Volume', 'SMA_50', 'SMA_200', 'RSI', 'CCI', 'Momentum']]
 
-    input = np.array(input, dtype=np.float32).reshape(1,-1)
-    input = np.reshape(input, (1,1, input.shape[1]))
-    print(input)
+    if(type!='regression'):
+        input = np.array(input, dtype=np.float32).reshape(1,-1)
+        input = np.reshape(input, (1,1, input.shape[1]))
+        print(input)
 
     prediction = model.predict(input)
-    prediction = scaler.inverse_transform(prediction)
+    if(type!='regression'):
+        prediction = scaler.inverse_transform(prediction.reshape(1,-1))
 
     return prediction
 
 # Uncomment this section if you wanna do a local test without having to run the miner
 # on a subnet. This main block (kinda) mimics the actual validator response being sent
-'''if(__name__=='__main__'):
+if(__name__=='__main__'):
     data = prep_data()
     scaler, X, y = scale_data(data)
+    #mse = create_and_save_base_model_regression(scaler, X, y)
+
+    #model = joblib.load('mining_models/base_linear_regression.joblib')
     model = load_model('mining_models/base_lstm.h5')
     ny_timezone = timezone('America/New_York')
     current_time_ny = datetime.now(ny_timezone)
     timestamp = current_time_ny.isoformat()
 
-
     #mse = create_and_save_base_model(scaler, X, y)
-    prediction = predict(timestamp, scaler, model)
-    print(prediction)'''
+    prediction = predict(timestamp, scaler, model, type='lstm')
+    print(prediction)
     
 
 
