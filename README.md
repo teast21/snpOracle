@@ -63,7 +63,7 @@ git clone https://github.com/teast21/predictionnet.git
 ```
 Install Requirements:
 ```
-pip3 -e install predictionnet
+pip3 install -e predictionnet
 ```
 
 ### Running a Miner
