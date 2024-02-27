@@ -9,10 +9,10 @@ import pandas as pd
 from pytz import timezone
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import load_model
-from model import create_and_save_base_model_lstm, create_and_save_base_model_regression
+from base_miner.model import create_and_save_base_model_lstm, create_and_save_base_model_regression
 
 # import custom defined files
-from get_data import prep_data, scale_data, round_down_time
+from base_miner.get_data import prep_data, scale_data, round_down_time
 
 
 def predict(timestamp:datetime, scaler:MinMaxScaler, model, type) -> float:
