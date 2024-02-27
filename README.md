@@ -73,14 +73,14 @@ To run your miner:
 ```
 pm2 start miner.config.js
 ```
-The miner.config.js has few flags added. Any standard flags can be passed, for example, wallet name and hotkey name will default to "default"; if you have a different configuration, edit your "args" in miner.config.js. Below shows a miner.config.js with extra configuration flags. 
+The miner.config.js has few flags added. Any standard flags can be passed, for example, wallet name and hotkey name will default to "default"; if you have a different configuration, edit your "args" in miner.config.js. Below shows a miner.config.js with extra configuration flags. The model flag is an extra flag used to reference a new model you save to the mining_models directory. The example below uses the default which is the base lstm.
 ```
 module.exports = {
   apps: [
     {
       name: 'miner',
       script: 'python3',
-      args: './neurons/miner.py --netuid X --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName --axon.port 8000'
+      args: './neurons/miner.py --netuid X --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName --axon.port 8000 --model base_lstm.h5'
     },
   ],
 };
