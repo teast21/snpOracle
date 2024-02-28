@@ -55,16 +55,16 @@ pm2 --version
 
 Begin by creating and sourcing a python virtual environment:
 ```
-python3 -m venv .snX
-source .snX/bin/activate
+python3 -m venv .sn28
+source .sn28/bin/activate
 ```
 Clone the Foundry S&P 500 Oracle repo:
 ```
-git clone https://github.com/teast21/predictionnet.git
+git clone https://github.com/teast21/snpOracle.git
 ```
 Install Requirements:
 ```
-pip3 install -e predictionnet
+pip3 install -e snpOracle
 ```
 
 ### Running a Miner
@@ -108,10 +108,10 @@ module.exports = {
 
 ## About the Rewards Mechanism
 
-The simplicity of the rewards mechanism is quite intentional. There are no methods to require a machine learning model be run by the miners. This is because the nature of the problem is such that machine learning models will inherently perform better than any method of gamification. By effectively performing a commit-reveal on a future S&P Price Prediction, PredictionNet ensures that only well-tuned models will survive. 
+The simplicity of the rewards mechanism is quite intentional. There are no methods to require a machine learning model be run by the miners. This is because the nature of the problem is such that machine learning models will inherently perform better than any method of gamification. By effectively performing a commit-reveal on a future S&P Price Prediction, S&P Oracle ensures that only well-tuned models will survive. 
 
 Root Mean Squared Error(RMSE) is calculated as such:
-![image](https://github.com/teast21/predictionnet/assets/109384972/214b9b12-2563-498c-8f06-956c9f9ee7b0)
+![image](https://github.com/teast21/snpOracle/assets/109384972/214b9b12-2563-498c-8f06-956c9f9ee7b0)
 
 The RMSE is then normalized to enforce scores between 0 and 1, and those scores are used to update the existing scores in the metagraph. The weighting function applied to how scores are added to the metagraph creates a pseudo-rolling average score for predictions. Thus, a miner will have perfect trust after a perfect prediction, and will also not have 0 trust after having the worst prediction of an epoch. Consistent high-quality performance will result in high trust, and consistent low-quality performance will result in low trust and eventual de-registration. 
 
@@ -119,7 +119,7 @@ The RMSE is then normalized to enforce scores between 0 and 1, and those scores 
 
 ## Roadmap
 
-Foundry will constantly work to make this subnet more robust, with the north star of creating end-user utility in mind. Some key features we are focused on rolling out to improve PredictionNet are listed here:
+Foundry will constantly work to make this subnet more robust, with the north star of creating end-user utility in mind. Some key features we are focused on rolling out to improve the S&P 500 Oracle are listed here:
 [] Huggingface Integration
 [] Wandb Integration
 [] Add Features to Rewards Mechanism
