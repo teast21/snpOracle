@@ -1,5 +1,5 @@
 <div align="center">
-<img src="acclerate.png" />
+<img src="accelerate.png" />
   
 # **Foundry S&P 500 Oracle** <!-- omit in toc -->
 ---
