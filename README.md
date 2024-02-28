@@ -1,6 +1,6 @@
 <div align="center">
 
-# **Foundry PredictionNet** <!-- omit in toc -->
+# **Foundry S&P 500 Oracle** <!-- omit in toc -->
 ---
 ---
 ---
@@ -14,7 +14,7 @@
 - [Design Decisions](#design-decisions)
 - [Installation](#installation)
   - [Install PM2](#install-pm2)
-  - [Install PredictionNet](#install-predictionnet)
+  - [Install Repo](#install-repo)
 - [About the Rewards Mechanism](#about-the-rewards-mechanism)
 - [Road Map](#road-map)
 - [License](#license)
@@ -22,7 +22,7 @@
 ---
 ## Introduction
 
-Foundry is launching Foundry PredictionNet to incentivize miners to make predictions on the S&P 500 price frequently throughout trading hours. Validators send miners a timestamp (a future time) for which the miners need to make an S&P 500 price prediction for. Miners need to respond with their prediction for the price of the S&P 500 at the given time. Validators store the miner predictions, and then calculate the scores of the miners after the predictions mature. Miners are ranked against eachother, naturally incentivizing competition between the miners. 
+Foundry is launching Foundry S&P 500 Oracle to incentivize miners to make predictions on the S&P 500 price frequently throughout trading hours. Validators send miners a timestamp (a future time) for which the miners need to make an S&P 500 price prediction for. Miners need to respond with their prediction for the price of the S&P 500 at the given time. Validators store the miner predictions, and then calculate the scores of the miners after the predictions mature. Miners are ranked against eachother, naturally incentivizing competition between the miners. 
 
 ---
 ## Design Decisions
@@ -51,14 +51,14 @@ pm2 --version
 |  8gb RAM  |  8gb RAM  | 
 |  2 vCPUs  |  2 vCPUs  | 
 
-### Install-PredictionNet
+### Install-Repo
 
 Begin by creating and sourcing a python virtual environment:
 ```
 python3 -m venv .snX
 source .snX/bin/activate
 ```
-Clone the Foundry PredictionNet repo:
+Clone the Foundry S&P 500 Oracle repo:
 ```
 git clone https://github.com/teast21/predictionnet.git
 ```
@@ -80,7 +80,7 @@ module.exports = {
     {
       name: 'miner',
       script: 'python3',
-      args: './neurons/miner.py --netuid X --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName --axon.port 8000 --model base_lstm.h5'
+      args: './neurons/miner.py --netuid 28 --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName --axon.port 8091 --model base_lstm.h5'
     },
   ],
 };
@@ -100,7 +100,7 @@ module.exports = {
     {
       name: 'validator',
       script: 'python3',
-      args: './neurons/validator.py --netuid X --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName'
+      args: './neurons/validator.py --netuid 28 --logging.debug --logging.trace --subtensor.network local --wallet.name walletName --wallet.hotkey hotkeyName'
     },
   ],
 };
@@ -133,7 +133,7 @@ We happily accept community feedback and features suggestions. Please reach out 
 This repository is licensed under the MIT License.
 ```text
 # The MIT License (MIT)
-# Copyright © 2024 Foundry Digital
+# Copyright © 2024 Foundry Digital LLC
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
