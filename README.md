@@ -1,5 +1,6 @@
 <div align="center">
-
+![logo](acclerate.png)
+  
 # **Foundry S&P 500 Oracle** <!-- omit in toc -->
 ---
 ---
