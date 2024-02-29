@@ -58,7 +58,7 @@ def get_config() -> "bt.Config":
     parser.add_argument(
         "--miner.blocks_per_epoch",
         type=str,
-        help="Blocks until the miner sets weights on chain",
+        help="Blocks until the miner repulls the metagraph from the chain",
         default=100,
     )
 
