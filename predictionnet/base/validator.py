@@ -28,6 +28,7 @@ from typing import List
 from traceback import print_exception
 
 from predictionnet.base.neuron import BaseNeuron
+import time
 
 
 class BaseValidatorNeuron(BaseNeuron):
@@ -244,20 +245,25 @@ class BaseValidatorNeuron(BaseNeuron):
         bt.logging.debug("uint_uids", uint_uids)
 
         # Set the weights on chain via our subtensor connection.
-        result = self.subtensor.set_weights(
-            wallet=self.wallet,
-            netuid=self.config.netuid,
-            uids=uint_uids,
-            weights=uint_weights,
-            wait_for_finalization=False,
-            wait_for_inclusion=False,
-            version_key=self.spec_version,
-        )
-        if result is True:
-            bt.logging.info("set_weights on chain successfully!")
-        else:
-            #bt.logging.error("set_weights failed")
-            pass
+        NUM_TIMES_TO_SET_WEIGHTS = 3
+        for i in range(NUM_TIMES_TO_SET_WEIGHTS):
+            bt.logging.info(f"Setting weights, iteration number: {i+1}")
+            result = self.subtensor.set_weights(
+                wallet=self.wallet,
+                netuid=self.config.netuid,
+                uids=uint_uids,
+                weights=uint_weights,
+                wait_for_finalization=False,
+                wait_for_inclusion=False,
+                version_key=self.spec_version
+            )
+
+            if result is True:
+                bt.logging.info("set_weights on chain successfully!")
+                break
+            else:
+                bt.logging.debug("Sleep 30 seconds and try again...")
+                time.sleep(30)
 
     def resync_metagraph(self):
         """Resyncs the metagraph and updates the hotkeys and moving averages based on the new metagraph."""
