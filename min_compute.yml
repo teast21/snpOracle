@@ -14,7 +14,7 @@ compute_spec:
   miner:
 
     cpu:
-      min_cores: 4            # Minimum number of CPU cores
+      min_cores: 2            # Minimum number of CPU cores
       min_speed: 2.5          # Minimum speed per core (GHz)
       recommended_cores: 8    # Recommended number of CPU cores
       recommended_speed: 3.5  # Recommended speed per core (GHz)
@@ -22,7 +22,7 @@ compute_spec:
 
     gpu:
       required: False                       # Does the application require a GPU?
-      min_vram: 8                          # Minimum GPU VRAM (GB)
+      min_vram: 0                          # Minimum GPU VRAM (GB)
       recommended_vram: 0                # Recommended GPU VRAM (GB)
       cuda_cores: 0                     # Minimum number of CUDA cores (if applicable)
       min_compute_capability: 0.0          # Minimum CUDA compute capability
@@ -30,7 +30,7 @@ compute_spec:
       recommended_gpu: "N/A"       # provide a recommended GPU to purchase/rent
 
     memory:
-      min_ram: 16          # Minimum RAM (GB)
+      min_ram: 8          # Minimum RAM (GB)
       min_swap: 4          # Minimum swap space (GB)
       recommended_swap: 8  # Recommended swap space (GB)
       ram_type: "DDR4"     # RAM type (e.g., DDR4, DDR3, etc.)
@@ -49,7 +49,7 @@ compute_spec:
   validator:
 
     cpu:
-      min_cores: 4            # Minimum number of CPU cores
+      min_cores: 2            # Minimum number of CPU cores
       min_speed: 2.5          # Minimum speed per core (GHz)
       recommended_cores: 8    # Recommended number of CPU cores
       recommended_speed: 3.5  # Recommended speed per core (GHz)
@@ -65,7 +65,7 @@ compute_spec:
       recommended_gpu: "N/A"       # provide a recommended GPU to purchase/rent
 
     memory:
-      min_ram: 16          # Minimum RAM (GB)
+      min_ram: 8          # Minimum RAM (GB)
       min_swap: 4          # Minimum swap space (GB)
       recommended_swap: 8  # Recommended swap space (GB)
       ram_type: "DDR4"     # RAM type (e.g., DDR4, DDR3, etc.)
