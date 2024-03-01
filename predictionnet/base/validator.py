@@ -264,8 +264,8 @@ class BaseValidatorNeuron(BaseNeuron):
                 bt.logging.info("set_weights on chain successfully!")
                 break
             else:
-                bt.logging.debug("Sleep 30 seconds and try again...")
-                time.sleep(30)
+                bt.logging.debug("Sleep 15 seconds and try again...")
+                time.sleep(15)
 
     def resync_metagraph(self):
         """Resyncs the metagraph and updates the hotkeys and moving averages based on the new metagraph."""
