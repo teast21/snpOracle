@@ -36,6 +36,8 @@ class BaseValidatorNeuron(BaseNeuron):
     Base class for Bittensor validators. Your validator should inherit from this class.
     """
 
+    neuron_type: str = "ValidatorNeuron"
+
     def __init__(self, config=None):
         super().__init__(config=config)
 
@@ -262,8 +264,8 @@ class BaseValidatorNeuron(BaseNeuron):
                 bt.logging.info("set_weights on chain successfully!")
                 break
             else:
-                bt.logging.debug("Sleep 30 seconds and try again...")
-                time.sleep(30)
+                bt.logging.debug("Sleep 15 seconds and try again...")
+                time.sleep(15)
 
     def resync_metagraph(self):
         """Resyncs the metagraph and updates the hotkeys and moving averages based on the new metagraph."""

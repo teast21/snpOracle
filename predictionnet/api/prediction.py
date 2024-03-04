@@ -1,7 +1,7 @@
 # The MIT License (MIT)
-# Copyright © 2023 Yuma Rao
-# TODO(developer): Set your name
-# Copyright © 2023 <your name>
+# Copyright © 2021 Yuma Rao
+# Copyright © 2023 Opentensor Foundation
+# Copyright © 2023 Opentensor Technologies Inc
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the “Software”), to deal in the Software without restriction, including without limitation
@@ -17,24 +17,29 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-# TODO(developer): Change this value when updating your code base.
-# Define the version of the template module.
-__version__ = "1.0.1"
-version_split = __version__.split(".")
-__spec_version__ = (
-    (1000 * int(version_split[0]))
-    + (10 * int(version_split[1]))
-    + (1 * int(version_split[2]))
-)
+import bittensor as bt
+from typing import List, Optional, Union, Any, Dict
+from predictionnet.protocol import Challenge
+from predictionnet.api import SubnetsAPI
 
-# Import all submodules.
-from . import protocol
-from . import base
-from . import validator
 
-import json
+class PredictionAPI(SubnetsAPI):
+    def __init__(self, wallet: "bt.wallet"):
+        super().__init__(wallet)
+        self.netuid = 28
+        self.name = "prediction"
 
-SUBNET_LINKS = None
-with open("subnet_links.json") as f:
-    links_dict = json.load(f)
-    SUBNET_LINKS = links_dict.get("subnet_repositories", None)
+    def prepare_synapse(self, timestamp: str) -> Challenge:
+        synapse = Challenge(timestamp=timestamp)
+        return synapse
+
+    def process_responses(
+        self, responses: List[Union["bt.Synapse", Any]]
+    ) -> List[int]:
+        outputs = []
+        for response in responses:
+            print(response)
+            if response.dendrite.status_code != 200:
+                continue
+            outputs.append(response.prediction)
+        return outputs
