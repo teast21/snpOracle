@@ -158,7 +158,7 @@ class Miner(BaseMinerNeuron):
         the miner's intended operation. This method demonstrates a basic transformation of input data.
         """
         bt.logging.info(
-            f"Received prediction request from: {synapse.dendrite.hotkey} for timestamp: {synapse.timestamp}"
+            f"👈 Received prediction request from: {synapse.dendrite.hotkey} for timestamp: {synapse.timestamp}"
         )
 
         timestamp = synapse.timestamp
@@ -177,8 +177,8 @@ class Miner(BaseMinerNeuron):
         # logic to ensure that only past 20 day context exists in synapse
         synapse.prediction = prediction
         
-        bt.logging.info(
-            f"Predicted price: {synapse.prediction}"
+        bt.logging.success(
+            f"Predicted price 🎯: {synapse.prediction}"
         )
 
         return synapse
